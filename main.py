@@ -34,10 +34,9 @@ Bulbasaur = Pokemon(Unit_info["Bulbasaur"]["HP"], Unit_info["Bulbasaur"]["EA"], 
 
 
 class Trainer: 
-    def __init__(self, name="", poke_list=[], step=0):
+    def __init__(self, name="", poke_list=[]):
         self.name = name
         self.poke_list = poke_list
-        self.step = step
 
     # Add the pokemon to poke_list
     def poke_add(self, poke):
@@ -49,16 +48,14 @@ class Trainer:
 
     # Print the player pokemon list
     def print_poke_list(self):
-        print("This is your actual Pokémon team:")
+        print("\n\nThis is your actual Pokémon team:")
         for i in range(len(self.poke_list)):
             print(i+1, self.poke_list[i].name,"(",self.poke_list[i].HP,"/",self.poke_list[i].maxHP,")")
 
     # Pokemon starter choice between Charmander, Squirtle, and Bulbasaur
     def starter_choice(self):
-        print("Choose your starter pokemon")
-        print("1. Charmander")
-        print("2. Squirtle")
-        print("3. Bulbasaur")
+        print("\n\nChoose your starter pokemon")
+        print("1. Charmander ", "2. Squirtle ", "3. Bulbasaur\n")
         while True:
             choice = int(input("Enter the number of your choice: "))
             if choice == 1:
@@ -88,9 +85,10 @@ class Trainer:
             else:
                 print("Please enter a valid number")
 
-    def steps(self):
-        self.step += 1
-        return self.step
+def loading():
+    for i in range(3):
+        print(".")
+        time.sleep(1)
 
 # Numpy function
 def direction():
@@ -104,7 +102,7 @@ def direction():
     np.random.shuffle(matrix)
 
     # Let the player choose the direction bewteen north, south, east, and west
-    print("Choose the direction you want to go")
+    print("Choose the direction you want to go:")
     print("1. North")
     print("2. South")
     print("3. East")
@@ -130,53 +128,51 @@ def direction():
         else:
             print("Please enter a valid number")
 
-    # Print the result
-    # print("The result is:", result)
-    # if result == 1:
-    #     print("Charmander")
-    # elif result == 2:
-    #     print("Squirtle")
-    # elif result == 3:
-    #     print("Bulbasaur")
-    # else:
-    #     print("Nothing")
-
+    loading()
     return result
 
 
 # Main function
 def main():
+    # Welcome
+    print("\n\nWelcome to the world of Pokémon!")
+    input("\nPress any key to continue")
     # 1. Set the trainer’s name
-    trn_name = input("Set the name of your trainer: ")
+    trn_name = input("\nSet the name of your trainer: ")
     trn = Trainer(trn_name)
-    print("Your name is:", trn.name)
+    print("\nGood luck for this adventure", trn.name, "!")
     # 2. Choose the starter Pokémon among (Charmander, Bulbasaur, Squirtle)
     # 3. Set the name of Pokémon you choose
     trn.starter_choice()
-    # Print the pokemon list
+    
     trn.print_poke_list()
 
     # 4. Trainer’s goal is to become a Pokémon master, to achieve his/her dream, trainer has 3 steps left to Pokémon master.
-    trn.steps()
-    print("You have", trn.steps() - 3, "step left to become a Pokémon master")
-    if(trn.steps() > 3):
-        print(trn.name, "became a Pokémon master ! Congratulation !")
-        print("The end")
-        return 0
-    else:
+    step = 4
+    while step > 1:
+        step -= 1
+        print("\nYou have", step, "step left to become a Pokémon master\n")
         # 5. Trainer can choose 4 ways to walk, each of east, west, north, south.
-        direction()
-        if(direction() == 1):
+        result = direction()
+        # 6. Each of the wild Pokémon (Charmander, Bulbasaur, Squirtle, and None) is assigned randomly to each way (no duplicates).
+        # B. Otherwise, if the Trainer choose was encountering wild Pokémon, then Pokémon battle starts.
+        if(result == 1):
             print("Wild Charmander appeared")
-            
-        elif(direction() == 2):
+
+        elif(result == 2):
             print("Wild Squirtle appeared")
 
-        elif(direction() == 3):
+        elif(result == 3):
             print("Wild Bulbasaur appeared")
 
         else:
-            print("Lucky you, there is nothing here")
+            # A. If the path Trainer choose was None, Trainer doesn’t need to fight wild Pokémon but just walk 1 step.
+            print("Lucky you, there is nothing here !")
+
+
+    print("\nCongratulation !", trn.name, "became a Pokémon master !")
+    print("The end ! Thank you for playing !\n")
+    return 0
 
 
 main()
