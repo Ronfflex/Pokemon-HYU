@@ -34,9 +34,10 @@ Bulbasaur = Pokemon(Unit_info["Bulbasaur"]["HP"], Unit_info["Bulbasaur"]["EA"], 
 
 
 class Trainer: 
-    def __init__(self, name="", poke_list=[]):
+    def __init__(self, name="", poke_list=[], step=0):
         self.name = name
         self.poke_list = poke_list
+        self.step = step
 
     # Add the pokemon to poke_list
     def poke_add(self, poke):
@@ -87,6 +88,61 @@ class Trainer:
             else:
                 print("Please enter a valid number")
 
+    def steps(self):
+        self.step += 1
+        return self.step
+
+# Numpy function
+def direction():
+    matrix = np.array([[0, 0], [0, 0]])
+    matrix[0][0] = 1 # North
+    matrix[0][1] = 2 # South
+    matrix[1][0] = 3 # East
+    matrix[1][1] = 0 # West
+
+    # Randomize the matrix
+    np.random.shuffle(matrix)
+
+    # Let the player choose the direction bewteen north, south, east, and west
+    print("Choose the direction you want to go")
+    print("1. North")
+    print("2. South")
+    print("3. East")
+    print("4. West")
+    while True:
+        choice = int(input("Enter the number of your choice: "))
+        if choice == 1:
+            print("You are going north")
+            result = matrix[0][0]
+            break
+        elif choice == 2:
+            print("You are going south")
+            result = matrix[0][1]
+            break
+        elif choice == 3:
+            print("You are going east")
+            result = matrix[1][0]
+            break
+        elif choice == 4:
+            print("You are going west")
+            result = matrix[1][1]
+            break
+        else:
+            print("Please enter a valid number")
+
+    # Print the result
+    # print("The result is:", result)
+    # if result == 1:
+    #     print("Charmander")
+    # elif result == 2:
+    #     print("Squirtle")
+    # elif result == 3:
+    #     print("Bulbasaur")
+    # else:
+    #     print("Nothing")
+
+    return result
+
 
 # Main function
 def main():
@@ -100,13 +156,27 @@ def main():
     # Print the pokemon list
     trn.print_poke_list()
 
-    #test
-    poke_mat = np.random.choice([Charmander, Squirtle, Bulbasaur, None], size=(2, 2), replace=False)
-    print("This is the Pokémon matrix:")
-    print(poke_mat)
-    print(poke_mat)
-    print(poke_mat)
-    #trn.choose_poke()
+    # 4. Trainer’s goal is to become a Pokémon master, to achieve his/her dream, trainer has 3 steps left to Pokémon master.
+    trn.steps()
+    print("You have", trn.steps() - 3, "step left to become a Pokémon master")
+    if(trn.steps() > 3):
+        print(trn.name, "became a Pokémon master ! Congratulation !")
+        print("The end")
+        return 0
+    else:
+        # 5. Trainer can choose 4 ways to walk, each of east, west, north, south.
+        direction()
+        if(direction() == 1):
+            print("Wild Charmander appeared")
+            
+        elif(direction() == 2):
+            print("Wild Squirtle appeared")
+
+        elif(direction() == 3):
+            print("Wild Bulbasaur appeared")
+
+        else:
+            print("Lucky you, there is nothing here")
 
 
 main()
