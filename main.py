@@ -241,10 +241,12 @@ def main():
     # Welcome
     print("\n\nWelcome to the world of Pokémon!")
     input("\nPress enter to continue")
+
     # 1. Set the trainer’s name
     trn_name = input("\nSet the name of your trainer: ")
     trn = Trainer(trn_name)
     print("\nGood luck for this adventure", trn.name, "!")
+
     # 2. Choose the starter Pokémon among (Charmander, Bulbasaur, Squirtle)
     # 3. Set the name of Pokémon you choose
     trn.starter_choice()
@@ -257,8 +259,10 @@ def main():
         step -= 1
         time.sleep(0.5)
         print("\nYou have", step, "step left to become a Pokémon master\n")
+
         # 5. Trainer can choose 4 ways to walk, each of east, west, north, south.
         result = direction()
+
         # 6. Each of the wild Pokémon (Charmander, Bulbasaur, Squirtle, and None) is assigned randomly to each way (no duplicates).
         # B. Otherwise, if the Trainer choose was encountering wild Pokémon, then Pokémon battle starts.
         if(result == 1):
@@ -275,42 +279,57 @@ def main():
             enemy = None
             print("Lucky you, there is nothing here !")
         
+
         if (enemy != None):
             battle_disp(trn.poke_list[0], enemy)
+
             while trn.poke_list[0].HP > 0 and enemy.HP > 0:
                 # 8.Every battle starts with the action of the Trainer, Trainer has 5 options below:
                 action = choose_action()
+
                 # A. Elemental Attack
                 if action == "EA":
                     poke_EA(trn.poke_list[0], enemy)
+
                 # B. Physical Attack
                 elif action == "PA":
                     poke_PA(trn.poke_list[0], enemy)
+
                 # C. Cure
                 elif action == "cure":
                     poke_cure(trn.poke_list[0])
+
                 # D. Capture wild Pokémon
                 elif action == "capture":
                     response = poke_capture(trn, enemy)
                     if response == True:
                         break
-                # E. Change Pokémon in my hands
+
+                # E. Change Pokémon in battle (if Trainer has more than 1 Pokémon)
                 elif action == "change":
                     trn.choose_poke()
+
+
                 # 10. After each of Pokémon’s turn is over, information of HP left of my Pokémon and wild Pokémon should be printed on python shell
                 battle_disp(trn.poke_list[0], enemy)
+
+                # 9.After the turn of trainer is finished, wild Pokémon use only elemental attack to attack Trainer’s Pokémon.
                 if enemy.HP > 0:
-                    # 9.After the turn of trainer is finished, wild Pokémon use only elemental attack to attack Trainer’s Pokémon.
                     poke_EA(enemy, trn.poke_list[0])
-                    # 10. After each of Pokémon’s turn is over, information of HP left of my Pokémon and wild Pokémon should be printed on python shell
+                    # 10bis. After each of Pokémon’s turn is over, information of HP left of my Pokémon and wild Pokémon should be printed on python shell
                     battle_disp(trn.poke_list[0], enemy)
+
+                # 7. Pokémon battle finished when either HP of enemy or my Pokémon is 0 (HP cannot be negative) 
                 if trn.poke_list[0].HP <= 0:
                     print("Your Pokémon is dead")
                     trn.poke_remove(trn.poke_list[0])
+
+                    # A. If Trainer has no Pokémon left to fight, game is over
                     if len(trn.poke_list) == 0:
                         print("\n", trn.name, "has no other Pokémon left...")
                         print("\n", trn.name, "blacked out!")
                         return 0;
+                    # B. If Trainer has Pokémon left alive to fight, Trainer can choose Pokémon among them
                     else:
                         trn.choose_poke()
                         print("You change to", trn.poke_list[0].species)
