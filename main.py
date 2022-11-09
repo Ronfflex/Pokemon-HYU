@@ -74,15 +74,17 @@ class Trainer:
             else:
                 print("Please enter a valid number")
 
-    # Pokemon chossing Method
+    # Pokemon choose from the poke_list
     def choose_poke(self):
-        print("Choose your Pokémon:")
+        print("\nChoose your Pokémon:")
         self.print_poke_list()
         while True:
             choice = int(input("Enter the number of your choice: "))
-            if choice > 0 and choice <= len(self.poke_list):
-                self.poke_list[choice-1].set_name()
-                return self.poke_list[choice-1]
+            if choice > 0 and choice <= len(self.poke_list) and choice != 1:
+                self.poke_list.insert(0, self.poke_list.pop(choice-1))
+                break
+            elif choice == 1:
+                print("This is your current Pokémon ! I saw you coming haha")
             else:
                 print("Please enter a valid number")
 
@@ -132,6 +134,7 @@ def poke_cure(poke=Pokemon()):
 
 
 def poke_capture(trn=Trainer(),enemy=Pokemon()):
+    loading()
     if enemy.HP < enemy.maxHP * 0.5:
         if random.random() < 0.9:
             print("gotcha!", enemy.species, "was caught!")
@@ -164,6 +167,7 @@ def loading():
 
 # Numpy function for direction
 def direction():
+    # Don't tell me why using numpy for this. I don't have the awnser. I just wanted to try it out.
     matrix = np.array([[0, 0], [0, 0]])
     matrix[0][0] = 1 # North
     matrix[0][1] = 2 # South
@@ -206,7 +210,7 @@ def direction():
 
 
 # Make function choose_action between 1.Elemental Attack 2.Physical Attack 3.Cure 4.Capture Pokémon 5.Change Pokémon
-def choose_action():
+def choose_action(trn=Trainer()):
     print("Choose the action you want to do:")
     print("1. Elemental Attack")
     print("2. Physical Attack")
@@ -224,7 +228,10 @@ def choose_action():
         elif choice == 4:
             return "capture"
         elif choice == 5:
-            return "change"
+            if len(trn.poke_list) > 1:
+                return "change"
+            else:
+                print("You don't have any other Pokémon !")
         else:
             print("Please enter a valid number")
 
@@ -258,10 +265,10 @@ def main():
             enemy = Charmander
             print("Wild Charmander appeared")
         elif(result == 2):
-            enemy = Bulbasaur
+            enemy = Squirtle
             print("Wild Squirtle appeared")
         elif(result == 3):
-            enemy = Squirtle
+            enemy = Bulbasaur
             print("Wild Bulbasaur appeared")
         else:
             # A. If the path Trainer choose was None, Trainer doesn’t need to fight wild Pokémon but just walk 1 step.
@@ -289,7 +296,7 @@ def main():
                         break
                 # E. Change Pokémon in my hands
                 elif action == "change":
-                    trn.poke_change()
+                    trn.choose_poke()
                 # 10. After each of Pokémon’s turn is over, information of HP left of my Pokémon and wild Pokémon should be printed on python shell
                 battle_disp(trn.poke_list[0], enemy)
                 if enemy.HP > 0:
@@ -297,8 +304,21 @@ def main():
                     poke_EA(enemy, trn.poke_list[0])
                     # 10. After each of Pokémon’s turn is over, information of HP left of my Pokémon and wild Pokémon should be printed on python shell
                     battle_disp(trn.poke_list[0], enemy)
+                if trn.poke_list[0].HP <= 0:
+                    print("Your Pokémon is dead")
+                    trn.poke_remove(trn.poke_list[0])
+                    if len(trn.poke_list) == 0:
+                        print("\n", trn.name, "has no other Pokémon left...")
+                        print("\n", trn.name, "blacked out!")
+                        return 0;
+                    else:
+                        trn.choose_poke()
+                        print("You change to", trn.poke_list[0].species)
+                        poke_EA(enemy, trn.poke_list[0])
+                        battle_disp(trn.poke_list[0], enemy)
 
-            # Heal the enemy Pokémon after the battle
+
+            # Heal the enemy Pokémon/object after the battle
             enemy.HP = enemy.maxHP
 
     # 11. After trainer complete his/her 3 steps of walking, print the word “{trainer’s name}! Congratulations! You became Pokémon master!”
